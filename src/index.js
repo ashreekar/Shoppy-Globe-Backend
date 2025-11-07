@@ -2,10 +2,12 @@ import { app } from "./app.js";
 import { connectDataBase } from "./db/index.js";
 import dotenv from 'dotenv';
 
+// configuring the dotenv
 dotenv.config({
-    path: "./env"
+    path: "../env"
 })
 
+// starting the server after connecting tho database
 connectDataBase()
     .then(() => {
         app.listen(process.env.PORT || 3317, () => {
