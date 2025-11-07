@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 
 // configuring the dotenv
 dotenv.config({
-    path: "../env"
+    path: "../.env"
 })
 
 // starting the server after connecting tho database
