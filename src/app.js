@@ -2,6 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
+// router imports
+import userRouter from './routes/user.route.js'
+import productRouter from './routes/product.route.js'
+import cartRouter from './routes/cart.route.js'
+
 // initialising an express app
 const app = express();
 
@@ -20,5 +25,10 @@ app.use(express.urlencoded());
 app.use(express.static('public'));
 // cookie parser to handle cookies
 app.use(cookieParser());
+
+// registering separate routes for different uses
+app.use('/api/v1/user',userRouter);
+app.use('/api/v1/products',productRouter);
+app.use('/api/v1/cart',cartRouter);
 
 export { app };
