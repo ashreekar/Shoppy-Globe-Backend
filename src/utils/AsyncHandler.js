@@ -1,5 +1,5 @@
 // function that handles every request handler functions
-const asyncHandler = async (requestHandler) => {
+export const asyncHandler = async (requestHandler) => {
     return (req, res, next) => {
         Promise.resolve(requestHandler(req, res, next))
             .catch((error) => {
