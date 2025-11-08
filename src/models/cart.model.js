@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// model for cart Items only storing product id and quantity
 const cartSchema = new mongoose.Schema(
     {
         productId: {

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// model for products
 const productSchema = new mongoose.Schema(
     {
         title: {
@@ -11,12 +12,14 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        // storing multiple images path for serving statically of type string
         images: [{
             type: String,
         }],
         thumbnail: {
             type: String,
         },
+        // review model is separate of and referign a each review
         reviews: [
             {
                 type: mongoose.Schema.Types.ObjectId,

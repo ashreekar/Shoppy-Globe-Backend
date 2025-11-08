@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
 
+// userschema is the main schema where user datails managed
 const userSchema = new mongoose.Schema(
     {
         fullName: {
@@ -22,6 +23,7 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        // storing the refresh token so when acceas token expires it can be generated again
         refreshToken: {
             type: String
         }
@@ -31,6 +33,7 @@ const userSchema = new mongoose.Schema(
     }
 )
 
+// pre hook runs to hash password on change of password
 userSchema.pre("save", async function (next) {
     if (this.isModified("password")) {
         const hashedPassword = await bcrypt.hash(this.password, 10);
@@ -39,10 +42,12 @@ userSchema.pre("save", async function (next) {
     next();
 })
 
+// this fucntion will check for passsword correctness while user loging in with hashed one
 userSchema.method.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password);
 }
 
+// fucntion togenerate acceas token
 userSchema.methods.generateAcceasToken = async function () {
     return await jwt.sign(
         {
@@ -58,6 +63,7 @@ userSchema.methods.generateAcceasToken = async function () {
     )
 }
 
+// fucntion to generate refreshtoken
 userSchema.methods.generateRefreshToken = async function () {
     return await jwt.sign(
         {
