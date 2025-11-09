@@ -76,19 +76,19 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 const logoutUser = asyncHandler(async (req, res) => {
-    const userBody = req.user;
+    const user = req.user;
 
     if (!user) {
         throw new APIerror(404, "Invalid acceas from user");
     }
 
     await User.findByIdAndUpdate(
-        userBody._id,
+        user._id,
         { $set: { refreshToken: "" } },
         { new: true }
     );
 
-     const options = {
+    const options = {
         httpOnly: true,
         secure: true
     }
@@ -96,4 +96,4 @@ const logoutUser = asyncHandler(async (req, res) => {
     res.status(200).clearCookie("sgacceastoken").clearCookie("sgrefreshtoken").json(new APIresponse(200, "logged out sucessfully", null));
 })
 
-export { registerUser, loginUser };
+export { registerUser, loginUser, logoutUser };
