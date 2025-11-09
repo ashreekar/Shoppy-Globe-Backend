@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 // router imports
 import userRouter from './routes/user.route.js'
@@ -22,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 // middleware to serve static assets
-app.use(express.static('public'));
+app.use(express.static(path.resolve("public")));
 // cookie parser to handle cookies
 app.use(cookieParser());
 

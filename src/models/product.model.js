@@ -54,7 +54,8 @@ const productSchema = new mongoose.Schema(
         },
         availabilityStatus: {
             type: Boolean,
-            default: true
+            default: true,
+            required:true
         },
         tags: [
             {
