@@ -37,4 +37,26 @@ const addProduct = asyncHandler(async (req, res) => {
     return res.status(201).json(new APIresponse(201, "New product added", product));
 })
 
-export { addProduct };
+const getAllProducts = asyncHandler(async (req, res) => {
+    const products = await Product.find({});
+
+    if (!products) {
+        return res.send(200).json(new APIresponse(200, "No products found", ""));
+    }
+
+    res.status(200).json(new APIresponse(200, "Sending results for products", products));
+})
+
+const getProductById = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+        throw new APIerror(404, "Product with id not found");
+    }
+
+    res.status(200).json(new APIresponse(200, "Sending results for product", product));
+})
+
+export { addProduct, getAllProducts, getProductById };
