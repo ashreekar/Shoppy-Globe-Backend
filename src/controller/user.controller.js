@@ -6,14 +6,14 @@ import { APIerror } from "../utils/APIError.js";
 const generateAcceasTokenAndRefreshToken = async (id) => {
     try {
         const user = await User.findById(id);
-        
+
         const acceasToken = await user.generateAcceasToken();
         const refreshToken = await user.generateRefreshToken();
-        
+
         user.refreshToken = refreshToken;
-        
+
         await user.save({ validateBeforeSave: false });
-        
+
         return { acceasToken, refreshToken };
     } catch (error) {
         throw new APIerror(500, "Something went wrong while generating acceas token and refresh token", error);
@@ -73,7 +73,27 @@ const loginUser = asyncHandler(async (req, res) => {
                 refreshToken
             }
         ))
+})
 
+const logoutUser = asyncHandler(async (req, res) => {
+    const userBody = req.user;
+
+    if (!user) {
+        throw new APIerror(404, "Invalid acceas from user");
+    }
+
+    await User.findByIdAndUpdate(
+        userBody._id,
+        { $set: { refreshToken: "" } },
+        { new: true }
+    );
+
+     const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    res.status(200).clearCookie("sgacceastoken").clearCookie("sgrefreshtoken").json(new APIresponse(200, "logged out sucessfully", null));
 })
 
 export { registerUser, loginUser };
