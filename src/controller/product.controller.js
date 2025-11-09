@@ -59,4 +59,16 @@ const getProductById = asyncHandler(async (req, res) => {
     res.status(200).json(new APIresponse(200, "Sending results for product", product));
 })
 
-export { addProduct, getAllProducts, getProductById };
+const deleteProduct = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
+    const product = await Product.findByIdAndDelete(id);
+
+    if (!product) {
+        throw new APIerror(404, "Product with id not found");
+    }
+
+    res.status(200).json(new APIresponse(200, "Product deleted sucessfully", product));
+})
+
+export { addProduct, getAllProducts, getProductById, deleteProduct };

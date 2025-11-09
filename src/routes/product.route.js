@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProduct, getAllProducts, getProductById } from "../controller/product.controller.js";
+import { addProduct, deleteProduct, getAllProducts, getProductById } from "../controller/product.controller.js";
 import { upload } from "../middleware/multer.js";
 import { verifyJwt } from "../middleware/verifyJWT.js";
 
@@ -24,9 +24,6 @@ router
         const id = req.params.id;
         res.send(`Products route it is updated : ${id}`);
     })
-    .delete((req, res) => {
-        const id = req.params.id;
-        res.send(`Products route it is deleted : ${id}`);
-    })
+    .delete(verifyJwt, deleteProduct)
 
 export default router;
