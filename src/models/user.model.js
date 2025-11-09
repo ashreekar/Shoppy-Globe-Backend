@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 // userschema is the main schema where user datails managed
 const userSchema = new mongoose.Schema(
@@ -43,7 +44,7 @@ userSchema.pre("save", async function (next) {
 })
 
 // this fucntion will check for passsword correctness while user loging in with hashed one
-userSchema.method.isPasswordCorrect = async function (password) {
+userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password);
 }
 
