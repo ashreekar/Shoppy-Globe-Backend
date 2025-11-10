@@ -7,7 +7,7 @@ const router = Router();
 
 router
     .route('/')
-    .get(verifyJwt, getAllProducts)
+    .get(getAllProducts)
     .post(verifyJwt, upload.fields([{
         name: "images",
         maxCount: 4
@@ -19,7 +19,7 @@ router
 
 router
     .route('/:id')
-    .get(verifyJwt, getProductById)
+    .get(getProductById)
     .put((req, res) => {
         const id = req.params.id;
         res.send(`Products route it is updated : ${id}`);
