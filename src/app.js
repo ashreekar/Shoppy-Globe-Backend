@@ -7,6 +7,7 @@ import path from 'path';
 import userRouter from './routes/user.route.js'
 import productRouter from './routes/product.route.js'
 import cartRouter from './routes/cart.route.js'
+import vendorRoute from './routes/vendor.route.js'
 
 // initialising an express app
 const app = express();
@@ -31,5 +32,6 @@ app.use(cookieParser());
 app.use('/api/v1/user',userRouter);
 app.use('/api/v1/products',productRouter);
 app.use('/api/v1/cart',cartRouter);
+app.use('/api/v1/vendor',vendorRoute);
 
 export { app };

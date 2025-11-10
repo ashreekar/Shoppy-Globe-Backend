@@ -1,5 +1,5 @@
-import { Vendor } from "../models/vendor.model";
-import { APIerror } from "../utils/APIError";
+import { Vendor } from "../models/vendor.model.js";
+import { APIerror } from "../utils/APIError.js";
 
 export const verifyVendor = async (req, res, next) => {
     const user = req.user;

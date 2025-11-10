@@ -77,7 +77,7 @@ vendorSchema.methods.generateAcceasToken = async function () {
 }
 
 // fucntion to generate refreshtoken
-userSchema.methods.generateRefreshToken = async function () {
+vendorSchema.methods.generateRefreshToken = async function () {
     return await jwt.sign(
         {
             _id: this._id,

@@ -1,6 +1,7 @@
 import { APIresponse } from '../utils/APIResponse.js';
 import { APIerror } from '../utils/APIError.js';
 import { User } from '../models/user.model.js';
+import { Vendor } from '../models/vendor.model.js';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const nameRegex = /^[A-Za-z\s]+$/;
@@ -41,6 +42,16 @@ const verifyUserExists = async (req, res, next) => {
 
     next();
 }
+const verifyVendorExists = async (req, res, next) => {
+    const { email, username } = req.body;
+    const userExists = await Vendor.findOne({ $or: [{ email }, { username }] });
+
+    if (userExists) {
+        throw new APIerror(400, "User exists please login");
+    }
+
+    next();
+}
 
 const verifyLoginUserFields = async (req, res, next) => {
     const { username, email, password } = req.body;
@@ -56,4 +67,4 @@ const verifyLoginUserFields = async (req, res, next) => {
     next();
 }
 
-export { verifyRegisterUserFields, verifyLoginUserFields, verifyUserExists };
+export { verifyRegisterUserFields, verifyLoginUserFields, verifyUserExists, verifyVendorExists };
