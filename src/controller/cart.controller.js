@@ -49,7 +49,7 @@ const updateTheCart = asyncHandler(async (req, res) => {
 
     const cart = await Cart.findOneAndUpdate(
         {
-            $and: { addedBy: req.user._id, productId }
+            $and: [{ addedBy: req.user._id }, { productId }]
         },
         {
             $set: {
@@ -77,9 +77,9 @@ const deleteCart = asyncHandler(async (req, res) => {
         throw new APIerror(404, "Product not found");
     }
 
-    const cart = await Cart.findByIdAndDelete(
+    await Cart.findOneAndDelete(
         {
-            $and: { addedBy: req.user._id, productId }
+            $and: [{ addedBy: req.user._id }, { productId }]
         },
         {
             new: true
