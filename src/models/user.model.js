@@ -27,7 +27,13 @@ const userSchema = new mongoose.Schema(
         // storing the refresh token so when acceas token expires it can be generated again
         refreshToken: {
             type: String
-        }
+        },
+        orders: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Order"
+            }
+        ]
     },
     {
         timestamps: true

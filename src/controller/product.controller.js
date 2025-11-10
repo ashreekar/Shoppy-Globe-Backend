@@ -39,7 +39,7 @@ const addProduct = asyncHandler(async (req, res) => {
     });
 
     await Vendor.findByIdAndUpdate(vendor._id, {
-        $push: product._id
+        $push: { products: product._id }
     })
 
     return res.status(201).json(new APIresponse(201, "New product added", product));
@@ -79,10 +79,10 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
     const vendorToBeUpdated = await Vendor.findById(vendor._id);
     const filteredProducts = vendorToBeUpdated.products.filter(product => product === id);
-    
+
     await Vendor.findByIdAndUpdate(vendor._id,
         {
-            $set:{products:filteredProducts}
+            $set: { products: filteredProducts }
         }
     )
 
