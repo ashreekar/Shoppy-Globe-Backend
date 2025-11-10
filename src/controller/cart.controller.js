@@ -92,7 +92,11 @@ const deleteCart = asyncHandler(async (req, res) => {
 const getWholeCartForUser = asyncHandler(async (req, res) => {
     const user = req.user;
 
-    const cart = await Cart.find({ addedBy: user._id });
+    const cart = await Cart.find(
+        {
+            addedBy: user._id
+        }
+    ).populate("productId");
 
     if (!cart) {
         throw new APIerror(404, "No items found in cart for a user");
