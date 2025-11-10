@@ -3,13 +3,14 @@ import { addProduct, deleteProduct, getAllProducts, getProductById } from "../co
 import { upload } from "../middleware/multer.js";
 import { verifyJwt } from "../middleware/verifyJWT.js";
 import { addAreview } from "../controller/review.controller.js";
+import { verifyVendor } from "../middleware/verifyVendor.js";
 
 const router = Router();
 
 router
     .route('/')
     .get(getAllProducts)
-    .post(verifyJwt, upload.fields([{
+    .post(verifyJwt, verifyVendor, upload.fields([{
         name: "images",
         maxCount: 4
     },

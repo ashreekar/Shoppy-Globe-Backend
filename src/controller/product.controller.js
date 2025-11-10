@@ -1,4 +1,5 @@
 import { Product } from '../models/product.model.js';
+import { Vendor } from '../models/vendor.model.js';
 import { APIerror } from '../utils/APIError.js';
 import { APIresponse } from '../utils/APIResponse.js';
 import { asyncHandler } from '../utils/AsyncHandler.js';
@@ -9,6 +10,8 @@ const addProduct = asyncHandler(async (req, res) => {
     if (!title || !price || !description || !category || !brand || !availabilityStatus) {
         throw new APIerror(400, "title, price, description,category,brand these fields must be filled");
     }
+
+    const vendor = req.vendor;
 
     const thumbnail = req.files?.thumbnail[0].filename;
     const imagesArray = req.files?.images;
@@ -31,8 +34,13 @@ const addProduct = asyncHandler(async (req, res) => {
         weight,
         stock,
         images,
-        thumbnail
+        thumbnail,
+        vendor
     });
+
+    await Vendor.findByIdAndUpdate(vendor._id, {
+        $push: product._id
+    })
 
     return res.status(201).json(new APIresponse(201, "New product added", product));
 })
@@ -61,12 +69,22 @@ const getProductById = asyncHandler(async (req, res) => {
 
 const deleteProduct = asyncHandler(async (req, res) => {
     const id = req.params.id;
+    const vendor = req.vendor;
 
     const product = await Product.findByIdAndDelete(id);
 
     if (!product) {
         throw new APIerror(404, "Product with id not found");
     }
+
+    const vendorToBeUpdated = await Vendor.findById(vendor._id);
+    const filteredProducts = vendorToBeUpdated.products.filter(product => product === id);
+    
+    await Vendor.findByIdAndUpdate(vendor._id,
+        {
+            $set:{products:filteredProducts}
+        }
+    )
 
     res.status(200).json(new APIresponse(200, "Product deleted sucessfully", product));
 })

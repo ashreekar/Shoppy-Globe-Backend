@@ -55,7 +55,7 @@ const productSchema = new mongoose.Schema(
         availabilityStatus: {
             type: Boolean,
             default: true,
-            required:true
+            required: true
         },
         tags: [
             {
@@ -74,9 +74,13 @@ const productSchema = new mongoose.Schema(
         },
         stock: {
             type: Number,
+        },
+        vendor: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Vendor"
         }
     },
     { timestamps: true }
 )
 
-export const Product=mongoose.model("Product",productSchema);
+export const Product = mongoose.model("Product", productSchema);
