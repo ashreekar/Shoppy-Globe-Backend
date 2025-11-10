@@ -38,7 +38,7 @@ const addProduct = asyncHandler(async (req, res) => {
 })
 
 const getAllProducts = asyncHandler(async (req, res) => {
-    const products = await Product.find({});
+    const products = await Product.find({}).populate("reviews");;
 
     if (!products) {
         return res.send(200).json(new APIresponse(200, "No products found", ""));
@@ -50,7 +50,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
 const getProductById = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate("reviews");
 
     if (!product) {
         throw new APIerror(404, "Product with id not found");
