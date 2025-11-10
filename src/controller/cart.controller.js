@@ -30,7 +30,7 @@ const addToCart = asyncHandler(async (req, res) => {
     res.status(201).json(new APIresponse(201, "Product added to cart sucessfully"), cart)
 })
 
-const addToCartByOne = asyncHandler(async (req, res) => {
+const updateTheCart = asyncHandler(async (req, res) => {
     const { productId, quantity } = req.body;
 
     if (!productId) {
@@ -47,8 +47,10 @@ const addToCartByOne = asyncHandler(async (req, res) => {
         throw new APIerror(404, "Product not found");
     }
 
-    const cart = await Cart.findByIdAndUpdate(
-        productId,
+    const cart = await Cart.findOneAndUpdate(
+        {
+            $and: { addedBy: req.user._id, productId }
+        },
         {
             $set: {
                 quantity: quantity
@@ -62,8 +64,41 @@ const addToCartByOne = asyncHandler(async (req, res) => {
     res.status(201).json(new APIresponse(201, "Product updated from cart sucessfully"), cart);
 })
 
-const deleteCart=asyncHandler(async(req,res)=>{
-    console.log("De,eted")
+const deleteCart = asyncHandler(async (req, res) => {
+    const { productId } = req.body;
+
+    if (!productId) {
+        throw new APIerror(404, "Product not found");
+    }
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+        throw new APIerror(404, "Product not found");
+    }
+
+    const cart = await Cart.findByIdAndDelete(
+        {
+            $and: { addedBy: req.user._id, productId }
+        },
+        {
+            new: true
+        }
+    )
+
+    res.status(203).json(new APIresponse(203, "Product deleted from cart"));
 })
 
-export { addToCart, addToCartByOne };
+const getWholeCartForUser = asyncHandler(async (req, res) => {
+    const user = req.user;
+
+    const cart = await Cart.find({ addedBy: user._id });
+
+    if (!cart) {
+        throw new APIerror(404, "No items found in cart for a user");
+    }
+
+    res.status(200).json(new APIresponse(200, "Cart data sent sucesfullu", cart));
+})
+
+export { addToCart, updateTheCart, deleteCart, getWholeCartForUser };

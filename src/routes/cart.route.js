@@ -1,17 +1,14 @@
 import { Router } from "express";
+import { addToCart, deleteCart, getWholeCartForUser, updateTheCart } from "../controller/cart.controller.js";
+import { verifyJwt } from "../middleware/verifyJWT.js";
 
 const router = Router();
 
 router
-.route('/')
-.post((req,res)=>{
-    res.send("product added in cart")
-})
-.put((req,res)=>{
-    res.send("Quantity updated in cart")
-})
-.delete((req,res)=>{
-    res.send("product delted from cart")
-})
+    .route('/')
+    .get(verifyJwt, getWholeCartForUser)
+    .post(verifyJwt, addToCart)
+    .put(verifyJwt, updateTheCart)
+    .delete(verifyJwt, deleteCart)
 
 export default router;
