@@ -6,9 +6,9 @@ import { asyncHandler } from "../utils/AsyncHandler.js";
 
 const addAreview = asyncHandler(async (req, res) => {
     const user = req.user;
-    const Id = req.params.id;
+    const id = req.params.id;
 
-    const product = await Product.findById(Id);
+    const product = await Product.findById(id);
 
     if (!product) {
         throw new APIerror(404, "Product not found");
@@ -23,8 +23,15 @@ const addAreview = asyncHandler(async (req, res) => {
     const review = await Review.create({
         body,
         owner: user._id,
-        product: Id
+        product: id
     })
+
+    await Product.findByIdAndUpdate(
+        id,
+        {
+            $push: { reviews: review }
+        }
+    )
 
     res
         .status(201)
