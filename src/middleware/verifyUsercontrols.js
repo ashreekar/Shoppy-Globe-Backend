@@ -12,7 +12,7 @@ const verifyRegisterUserFields = (req, res, next) => {
         throw new APIerror(400, "Fullname, username, email, password these fileds must be filled");
     }
 
-   if (!nameRegex.test(fullName)) {
+    if (!nameRegex.test(fullName)) {
         throw new APIerror(400, "Full name must only contain letters and spaces (no numbers or special characters)");
     }
 
@@ -20,7 +20,7 @@ const verifyRegisterUserFields = (req, res, next) => {
         throw new APIerror(400, "Fullname must have at least 4 characters and at most 25 characters");
     }
 
-     if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email)) {
         throw new APIerror(400, "Invalid email address");
     }
 
@@ -32,6 +32,7 @@ const verifyRegisterUserFields = (req, res, next) => {
 }
 
 const verifyUserExists = async (req, res, next) => {
+    const { email, username } = req.body;
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
 
     if (userExists) {
