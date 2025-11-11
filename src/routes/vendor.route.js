@@ -8,7 +8,7 @@ import { getOrdersForVendor } from "../controller/checkout.controller.js";
 
 const router = Router();
 
-router.get('/orders').get(verifyJwt, verifyVendor, getOrdersForVendor);
+router.route('/orders').get(verifyJwt, verifyVendor, getOrdersForVendor);
 router.route('/register').post(verifyRegisterUserFields, verifyVendorExists, registerVendor)
 router.route('/login').post(verifyLoginUserFields, loginVendor)
 router.route('/logout').post(verifyJwt, logoutUser)

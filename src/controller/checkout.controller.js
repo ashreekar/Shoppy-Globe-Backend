@@ -25,7 +25,7 @@ const checkOut = asyncHandler(async (req, res) => {
         if (vendorsMap[vendorId]) {
             vendorsMap[vendorId].push(item);
         } else {
-            vendorsMap[vendorId] = [];
+            vendorsMap[vendorId] = [item];
         }
     }
 
@@ -45,7 +45,7 @@ const checkOut = asyncHandler(async (req, res) => {
                 vendor: vendorId,
                 items: item.map((val) => {
                     return {
-                        product: val.product._id,
+                        product: val.productId._id,
                         quantity: val.quantity
                     }
                 }),
@@ -79,7 +79,15 @@ const checkOut = asyncHandler(async (req, res) => {
 const getOrders = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
-    const checkouts = await Checkout.find({ orderedBy: userId }).populate("product");
+    const checkouts = await Checkout.find({ orderedBy: userId })
+    .populate({
+            path: "items.product",   // this is the correct nested path
+            model: "Product"
+        })
+        .populate({
+            path: "vendor",          // optional: if you want vendor details too
+            model: "Vendor"
+        })
 
     res.status(200).json(new APIresponse(200, "All orders of user", checkouts));
 })
@@ -87,7 +95,16 @@ const getOrders = asyncHandler(async (req, res) => {
 const getOrdersForVendor = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
-    const orders = await Checkout.find({ vendor: userId }).populate("product");
+    const orders = await Checkout.find({ vendor: userId })
+    .populate({
+            path: "items.product",   // this is the correct nested path
+            model: "Product"
+        })
+        .populate({
+            path: "orderedBy",       // optional: include user details
+            model: "User",
+            select: "name email"
+        });
 
     res.status(200).json(new APIresponse(200, "All orders for vendor", orders));
 })
