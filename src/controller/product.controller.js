@@ -89,4 +89,24 @@ const deleteProduct = asyncHandler(async (req, res) => {
     res.status(200).json(new APIresponse(200, "Product deleted sucessfully", product));
 })
 
-export { addProduct, getAllProducts, getProductById, deleteProduct };
+const updateProductDetails = asyncHandler(async (req, res) => {
+    const productId = req.params.id;
+    const toUpdateFields = req.body;
+
+    const product = await Product.findById(productId);
+    if (!product) {
+        throw new APIerror(404, "Product not exists");
+    }
+
+    const fields = Object.keys(toUpdateFields);
+    if (fields.length === 0) {
+        throw new APIerror(404, "At least pne field must be filled");
+    }
+
+    fields.map((field) => {
+        product[field] = req.body[field];
+    })
+    product.save({ validateBeforeSave: false });
+})
+
+export { addProduct, getAllProducts, getProductById, deleteProduct, updateProductDetails };

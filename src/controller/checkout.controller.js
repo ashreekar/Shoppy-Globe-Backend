@@ -84,4 +84,12 @@ const getOrders = asyncHandler(async (req, res) => {
     res.status(200).json(new APIresponse(200, "All orders of user", checkouts));
 })
 
-export { checkOut, getOrders };
+const getOrdersForVendor = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+
+    const orders = await Checkout.find({ vendor: userId }).populate("product");
+
+    res.status(200).json(new APIresponse(200, "All orders for vendor", orders));
+})
+
+export { checkOut, getOrders, getOrdersForVendor };
