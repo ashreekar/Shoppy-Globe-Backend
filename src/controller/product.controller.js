@@ -13,8 +13,8 @@ const addProduct = asyncHandler(async (req, res) => {
 
     const vendor = req.vendor;
 
-    const thumbnail = req.files?.thumbnail[0].filename;
-    const imagesArray = req.files?.images;
+    const thumbnail = req.files?.thumbnail[0]?.filename;
+    const imagesArray = req.files?.images || [];
 
     const images = imagesArray.map(image => image.filename);
 
