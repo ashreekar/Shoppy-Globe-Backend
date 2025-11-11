@@ -8,6 +8,7 @@ import userRouter from './routes/user.route.js'
 import productRouter from './routes/product.route.js'
 import cartRouter from './routes/cart.route.js'
 import vendorRoute from './routes/vendor.route.js'
+import checkoutRoute from './routes/checkout.route.js'
 
 // initialising an express app
 const app = express();
@@ -29,9 +30,10 @@ app.use(express.static(path.resolve("public")));
 app.use(cookieParser());
 
 // registering separate routes for different uses
-app.use('/api/v1/user',userRouter);
-app.use('/api/v1/products',productRouter);
-app.use('/api/v1/cart',cartRouter);
-app.use('/api/v1/vendor',vendorRoute);
+app.use('/api/v1/user', userRouter);
+app.use('/api/v1/products', productRouter);
+app.use('/api/v1/cart', cartRouter);
+app.use('/api/v1/vendor', vendorRoute);
+app.use('/api/v1/checkout', checkoutRoute);
 
 export { app };
