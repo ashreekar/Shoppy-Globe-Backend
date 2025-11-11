@@ -116,6 +116,8 @@ MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/shoppyglobe
 ACCESS_TOKEN_SECRET=<your-secret-key>
 REFRESH_TOKEN_SECRET=<your-refresh-secret>
 CORS_ORIGIN=http://localhost:3000
+REFRESH_TOCKEN_EXPIRY=<your-expiry-val>
+ACCESS_TOCKEN_EXPIRY=<your-expiry-val>
 ````
 
 ---
@@ -208,8 +210,6 @@ CORS_ORIGIN=http://localhost:3000
 
 * Post checkout request, then verify orders in `/checkout` and vendor `/orders`
 
-> 💡 *Attach screenshots of each route response as per project submission guidelines.*
-
 ---
 
 ## 🛠️ Installation and Running Locally
@@ -239,7 +239,6 @@ App runs on:
 ## 🧑‍💻 Developer
 
 **👤 Ashreek A R**
-🎓 Engineering Student (EEE) – East West Institute of Technology, Bangalore
 📧 [ashreekar767@gmail.com](mailto:ashreekar767@gmail.com)
 
 ---
