@@ -102,47 +102,53 @@ const deleteProduct = asyncHandler(async (req, res) => {
     const id = req.params.id;
     const vendor = req.vendor;
 
-    const product = await Product.findByIdAndDelete(id);
+    // Delete only if vendor owns it
+    const product = await Product.findOneAndDelete({
+        _id: id,
+        vendor: vendor._id
+    });
 
     if (!product) {
-        throw new APIerror(404, "Product with id not found");
+        throw new APIerror(404, "Product not found or not owned by this vendor");
     }
 
-    // can't directly pop a product so finding and filtering the product
-    const vendorToBeUpdated = await Vendor.findById(vendor._id);
-    const filteredProducts = vendorToBeUpdated.products.filter(product => product === id);
+    // Remove product reference from vendor
+    await Vendor.findByIdAndUpdate(vendor._id, {
+        $pull: { products: id }
+    });
 
-    // and updating the vendor arary of products
-    await Vendor.findByIdAndUpdate(vendor._id,
-        {
-            $set: { products: filteredProducts }
-        }
-    )
+    res.status(200).json(
+        new APIresponse(200, "Product deleted successfully", product)
+    );
+});
 
-    res.status(200).json(new APIresponse(200, "Product deleted sucessfully", product));
-})
 
 // vendor can update product info also
 const updateProductDetails = asyncHandler(async (req, res) => {
     const productId = req.params.id;
     const toUpdateFields = req.body;
+    const vendor = req.vendor;
 
-    const product = await Product.findById(productId);
+    const product = await Product.findOne({ _id: productId, vendor: vendor._id });
+
     if (!product) {
-        throw new APIerror(404, "Product not exists");
+        throw new APIerror(404, "Product not found or not owned by this vendor");
     }
 
-    // getting all the keys that needs to be updated
     const fields = Object.keys(toUpdateFields);
     if (fields.length === 0) {
-        throw new APIerror(404, "At least pne field must be filled");
+        throw new APIerror(400, "At least one field must be provided");
     }
 
-    // updating product with given fields
-    fields.map((field) => {
-        product[field] = req.body[field];
-    })
-    product.save({ validateBeforeSave: false });
-})
+    fields.forEach((field) => {
+        product[field] = toUpdateFields[field];
+    });
+
+    await product.save({ validateBeforeSave: false });
+
+    res.status(200).json(
+        new APIresponse(200, "Product updated successfully", product)
+    );
+});
 
 export { addProduct, getAllProducts, getProductById, deleteProduct, updateProductDetails };
