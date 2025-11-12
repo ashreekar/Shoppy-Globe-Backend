@@ -28,12 +28,15 @@ const vendorSchema = new mongoose.Schema(
         refreshToken: {
             type: String
         },
+        // Matching product id with products schema and so that it's an array of object
         products: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Product"
             }
         ],
+        // not really a necessary field but matching and updating the orders field in case
+        // it is actually directly mapped by vendor schema
         orders:[
              {
                 type: mongoose.Schema.Types.ObjectId,

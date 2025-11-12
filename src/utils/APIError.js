@@ -1,3 +1,5 @@
+// when we throw an new APIerror 
+// it will be handled by the global error handling middleware
 class APIerror extends Error {
     // custom APIerror class that is a child of error class
     // constructor recieves statuscode message errors and stack

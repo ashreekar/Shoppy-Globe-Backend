@@ -5,6 +5,7 @@ import { verifyJwt } from "../middleware/verifyJWT.js";
 
 const router = Router();
 
+// user have 3 features login, register and logout route
 router.route('/register').post(verifyRegisterUserFields, verifyUserExists, registerUser)
 
 router.route('/login').post(verifyLoginUserFields, loginUser)

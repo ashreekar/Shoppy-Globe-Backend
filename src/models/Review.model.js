@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Review model mainly matches with product so for every product reviews can be viewed
 const reviewSchema = new mongoose.Schema(
     {
         body: {

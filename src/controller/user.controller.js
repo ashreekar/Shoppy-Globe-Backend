@@ -3,6 +3,7 @@ import { asyncHandler } from '../utils/AsyncHandler.js';
 import { APIresponse } from '../utils/APIResponse.js'
 import { APIerror } from "../utils/APIError.js";
 
+// genrating acceas and refreshtoken using schema methods
 const generateAcceasTokenAndRefreshToken = async (id) => {
     try {
         const user = await User.findById(id);
@@ -10,6 +11,7 @@ const generateAcceasTokenAndRefreshToken = async (id) => {
         const acceasToken = await user.generateAcceasToken();
         const refreshToken = await user.generateRefreshToken();
 
+        // upadting refrestoken in db
         user.refreshToken = refreshToken;
 
         await user.save({ validateBeforeSave: false });
@@ -23,6 +25,7 @@ const generateAcceasTokenAndRefreshToken = async (id) => {
 const registerUser = asyncHandler(async (req, res) => {
     const { fullName, username, email, password } = req.body;
 
+    // creating a basic user profile
     const user = await User.create(
         {
             fullName,
@@ -40,20 +43,24 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password, username } = req.body;
 
+    // finding whether user exists by eamil or password
     const user = await User.findOne({ $or: [{ email }, { username }] });
 
     if (!user) {
         throw new APIerror(404, "User not found");
     }
 
+    // validating the password using bcrypt
     const isValidPassword = await user.isPasswordCorrect(password);
 
     if (!isValidPassword) {
         throw new APIerror(401, "Incorrect password");
     }
 
+    // generating acceas and refresh token
     const { acceasToken, refreshToken } = await generateAcceasTokenAndRefreshToken(user._id);
 
+    // filtering our password and refresh token
     const loggeduser = await User.findById(user._id).
         select("-password -refreshToken")
 
@@ -62,6 +69,7 @@ const loginUser = asyncHandler(async (req, res) => {
         secure: true
     }
 
+    // sending cookies through options
     res.status(200)
         .cookie("sgAcceasToken", acceasToken, options)
         .cookie("sgRefreshToken", refreshToken, options)
@@ -75,6 +83,7 @@ const loginUser = asyncHandler(async (req, res) => {
         ))
 })
 
+//method to logut user
 const logoutUser = asyncHandler(async (req, res) => {
     const user = req.user;
 
@@ -82,6 +91,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         throw new APIerror(404, "Invalid acceas from user");
     }
 
+    // find user and set refreshtoken to null
     await User.findByIdAndUpdate(
         user._id,
         { $set: { refreshToken: "" } },
@@ -93,7 +103,11 @@ const logoutUser = asyncHandler(async (req, res) => {
         secure: true
     }
 
-    res.status(200).clearCookie("sgacceastoken").clearCookie("sgrefreshtoken").json(new APIresponse(200, "logged out sucessfully", null));
+    // clearing cookies before response
+    res.status(200)
+    .clearCookie("sgAcceastoken")
+    .clearCookie("sgRefreshtoken")
+    .json(new APIresponse(200, "logged out sucessfully", null));
 })
 
 export { registerUser, loginUser, logoutUser };

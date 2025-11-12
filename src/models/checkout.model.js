@@ -6,18 +6,22 @@ const checkoutSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        // productId matches User from User schema
         orderedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true
         },
+        // productId matches Vendor from Vendor schema
         vendor: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Vendor",
             required: true
         },
+        // This array of ites makes a checkout items for a vendor
         items: [
             {
+                // productId matches product from Product schema
                 product: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Product",

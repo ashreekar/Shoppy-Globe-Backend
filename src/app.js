@@ -9,7 +9,7 @@ import productRouter from './routes/product.route.js'
 import cartRouter from './routes/cart.route.js'
 import vendorRoute from './routes/vendor.route.js'
 import checkoutRoute from './routes/checkout.route.js'
-import { errorHanler } from './middleware/error.middleware.js';
+import { errorHandler } from './middleware/error.middleware.js';
 
 // initialising an express app
 const app = express();
@@ -37,6 +37,8 @@ app.use('/api/v1/cart', cartRouter);
 app.use('/api/v1/vendor', vendorRoute);
 app.use('/api/v1/checkout', checkoutRoute);
 
-app.use(errorHanler);
+// global error handling middleware so returns a response of status code, 
+// sucess flag and message
+app.use(errorHandler);
 
 export { app };

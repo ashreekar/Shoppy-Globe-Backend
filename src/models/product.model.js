@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 // model for products
+// Not all fields are necessary to be filled
 const productSchema = new mongoose.Schema(
     {
         title: {

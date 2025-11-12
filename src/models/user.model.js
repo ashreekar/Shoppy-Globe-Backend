@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema(
         refreshToken: {
             type: String
         },
+        // not really a necessary field but matching and updating the orders field in case
         orders: [
             {
                 type: mongoose.Schema.Types.ObjectId,
