@@ -112,8 +112,9 @@ const getOrders = asyncHandler(async (req, res) => {
         })
         .populate({
             path: "vendor",          // poulating with vendor details
-            model: "Vendor"
-        }).select(-refreshToken, -password)
+            model: "Vendor",
+            select: "username fullName email"
+        })
 
     res.status(200).json(new APIresponse(200, "All orders of user", checkouts));
 })
