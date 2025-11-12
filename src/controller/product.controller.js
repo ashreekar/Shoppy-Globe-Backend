@@ -19,7 +19,11 @@ const addProduct = asyncHandler(async (req, res) => {
 
     // if sends images they are uploaded through multur
     // uploading multiple files so an array of files exists
-    const thumbnail = req.files?.thumbnail[0]?.filename;
+    const thumbnailArray = req.files?.thumbnail;
+    let thumbnail=null;
+    if(thumbnailArray){
+        thumbnail=thumbnailArray[0]?.filename;
+    }
     const imagesArray = req.files?.images || [];
 
     const images = imagesArray.map(image => image.filename);
