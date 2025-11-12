@@ -21,7 +21,7 @@ const verifyRegisterUserFields = (req, res, next) => {
     }
 
     // limiting nme lenght
-    if (fullName.length < 4 && fullName.length > 25) {
+    if (fullName.length < 4 || fullName.length > 25) {
         throw new APIerror(400, "Fullname must have at least 4 characters and at most 25 characters");
     }
 
