@@ -3,6 +3,7 @@ import { Vendor } from '../models/vendor.model.js';
 import { APIerror } from '../utils/APIError.js';
 import { APIresponse } from '../utils/APIResponse.js';
 import { asyncHandler } from '../utils/AsyncHandler.js';
+import { uploadOnCloudinary, deleteOnCloudinary } from '../utils/cloudinary.js';
 
 // this request handler is to add products from a vendor only
 const addProduct = asyncHandler(async (req, res) => {
@@ -20,13 +21,24 @@ const addProduct = asyncHandler(async (req, res) => {
     // if sends images they are uploaded through multur
     // uploading multiple files so an array of files exists
     const thumbnailArray = req.files?.thumbnail;
-    let thumbnail=null;
-    if(thumbnailArray){
-        thumbnail=thumbnailArray[0]?.filename;
+    let thumbnail = null;
+    if (thumbnailArray) {
+        thumbnail = thumbnailArray[0]?.path;
     }
     const imagesArray = req.files?.images || [];
 
-    const images = imagesArray.map(image => image.filename);
+    const imagesPath = await Promise.all(
+        imagesArray.map(async (image) => {
+            const uploaded = await uploadOnCloudinary(image.path);
+            return uploaded?.url; // adjust based on what uploadOnCloudinary returns
+        })
+    );
+
+    let thumbnailPath = null;
+    if (thumbnail) {
+        const uploadedThumbnail = await uploadOnCloudinary(thumbnail);
+        thumbnailPath = uploadedThumbnail?.url;
+    }
 
     // ccretaing a product with all fields
     const product = await Product.create({
@@ -44,8 +56,8 @@ const addProduct = asyncHandler(async (req, res) => {
         sku,
         weight,
         stock,
-        images,
-        thumbnail,
+        images: imagesPath,
+        thumbnail: thumbnailPath,
         vendor
     });
 
