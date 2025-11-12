@@ -3,6 +3,8 @@
 Backend API for **ShoppyGlobe**, a multi-vendor e-commerce application built using **Node.js**, **Express.js**, and **MongoDB**.  
 This project handles authentication, product management, cart operations, vendor management, checkout, and order processing with proper error handling and validations.
 
+#GitHub link:
+[https://github.com/ashreekar/Shoppy-Globe-Backend](https://github.com/ashreekar/Shoppy-Globe-Backend)
 ---
 
 ## 🚀 Features
