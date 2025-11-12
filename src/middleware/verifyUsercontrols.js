@@ -11,7 +11,7 @@ const verifyRegisterUserFields = (req, res, next) => {
     const { fullName, username, email, password } = req.body;
 
     // throws error if any of below fields is missing
-    if ([fullName, username, email, password].some(val => val.trim() === "")) {
+    if ([fullName, username, email, password].some(val => val?.trim() === "" || val === undefined)) {
         throw new APIerror(400, "Fullname, username, email, password these fileds must be filled");
     }
 
